@@ -1,0 +1,13 @@
+global:
+  sequence:
+    runtime:
+      - eric-enm-pm-bench
+  cnivAgent:
+    enabled: true
+    endpoint: "ccc-cniv-agent:8080"
+    name: "eric-oss-cniv"
+    port: "8080"
+  registry:
+    url: armdocker.rnd.ericsson.se
+  storageClass:
+    file: nfs-enm6

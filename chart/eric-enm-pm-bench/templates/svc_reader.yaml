@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "eric-enm-pm-bench.name" . }}-reader
+  labels:
+    {{- include "eric-enm-pm-bench.helm-labels" . | nindent 4 }}
+    app: {{ include "eric-enm-pm-bench.name" . }}-reader
+  annotations:
+    {{- include "eric-enm-pm-bench.annotations" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ include "eric-enm-pm-bench.name" . }}-reader
+  ports:
+    - name: metrics
+      protocol: TCP
+      port: {{ .Values.benchmarkArgs.metricsPort }}
+      targetPort: {{ .Values.benchmarkArgs.metricsPort }}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workload>
+    <rop id="15">
+        <!-- Type 1 -->
+        <rns start="1" count="1" numOfNodes="100">
+            <nodeBandwidth bandwidth="3072">
+                <fileworkload type="XML"  numfiles="1"  filesize="52"/>
+                <fileworkload type="CTRCU"  numfiles="1"  filesize="4812"/>
+                <fileworkload type="EBSN" numfiles="1" filesize="256"/>
+            </nodeBandwidth>
+        </rns>
+        <!-- Type 2 -->
+        <rns start="2" count="1" numOfNodes="100">
+            <nodeBandwidth bandwidth="3072">
+                <fileworkload type="XML"  numfiles="1"  filesize="52"/>
+                <fileworkload type="CTR"  numfiles="1"  filesize="4812"/>
+                <fileworkload type="UETR" numfiles="1" filesize="154"/>
+            </nodeBandwidth>
+        </rns>
+    </rop>
+    <rop id="1">
+        <!-- Type 2 1 Min ROP-->
+        <rns start="1" count="1" numOfNodes="200">
+            <nodeBandwidth bandwidth="3072">
+                <fileworkload type="XML" numfiles="4" filesize="256"/>
+            </nodeBandwidth>
+        </rns>
+    </rop>
+    <retention type="XML:15"  value="288"/>
+    <retention type="CTR:15"  value="24"/>
+    <retention type="CTRCU:15"  value="24"/>
+    <retention type="UETR:15" value="24"/>
+    <retention type="EBSN:15" value="24"/>
+    <retention type="XML:01" value="24"/>
+
+    <writesize type="XML" value="64"/>
+    <writesize type="CTR"  value="32"/>
+    <writesize type="UETR" value="32"/>
+    <writesize type="GPEH" value="32"/>
+    <writesize type="EBSN" value="32"/>
+
+</workload>

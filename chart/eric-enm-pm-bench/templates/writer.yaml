@@ -1,0 +1,67 @@
+{{ if gt (int .Values.benchmarkArgs.controller.modeArgs.writers) 0 }}
+{{ $root := .}}
+{{ range $i,$e := until (int $.Values.benchmarkArgs.controller.modeArgs.writers) }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "eric-enm-pm-bench.name" $ }}-writer-{{$i}}
+  labels:
+    {{- include "eric-enm-pm-bench.helm-labels" $ | nindent 4 }}
+    benchmarkName: {{ include "eric-enm-pm-bench.name" $ }}
+  annotations:
+    {{- include "eric-enm-pm-bench.configproduct-annotations" $ | nindent 4 }}
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        app: {{ include "eric-enm-pm-bench.name" $ }}-writer
+        {{- include "eric-enm-pm-bench.grouplabel" $ | nindent 8 }}
+        sidecar.istio.io/inject: "false"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: {{ template "eric-enm-pm-bench.fsGroup.coordinated" $ }}
+      imagePullSecrets:
+        - name: {{ template "eric-enm-pm-bench.pullSecret" $ }}
+      initContainers:
+      {{- if eq (include "eric-enm-pm-bench.cnivAgent" $ ) "true" }}
+      - name: init-service
+        image: {{ template "eric-enm-pm-bench.initbenchImagePath" $ }}
+        args: ['{{ include "eric-enm-pm-bench.cnivAgent.endpoint" $ }}', '{{ template "eric-enm-pm-bench.benchmarkGroup.label" $ }}', '{{ include "eric-enm-pm-bench.name" $ }}-writer']
+        imagePullPolicy: Always
+        securityContext:
+{{- include "eric-enm-pm-bench.container-securitycontext" . | nindent 10 }}
+      {{- end }}
+      containers:
+      - name: writer-{{$i}}
+        image: {{ template "eric-enm-pm-bench.iotestImagePath" $ }}
+        command: ['sh', '-c', '/entry.sh writer.IoWriter']
+        imagePullPolicy: {{ template "eric-enm-pm-bench.imagePullPolicy" $ }}
+        securityContext:
+{{- include "eric-enm-pm-bench.container-securitycontext" . | nindent 10 }}
+        volumeMounts:
+        - name: loaddir-1
+          mountPath: /loaddir1
+        - name: loaddir-2
+          mountPath: /loaddir2
+        resources:
+          {{- toYaml $.Values.resources.writer | nindent 12 }}
+        env:
+        - name: MODE
+          value: "WRITER"
+        - name: MODE_ARGS
+          value: "{{ include "eric-enm-pm-bench.name" $ }}-controller"
+        - name: ADD_ARGS
+          value: "{{ include "eric-enm-pm-bench.threadperwriter" $ }}"
+      volumes:
+      - name: loaddir-1
+        persistentVolumeClaim:
+          claimName: {{ include "eric-enm-pm-bench.name" $ }}-1
+      - name: loaddir-2
+        persistentVolumeClaim:
+          claimName: {{ include "eric-enm-pm-bench.name" $ }}-2
+      restartPolicy: Never
+---
+{{- end }}
+{{- end }}

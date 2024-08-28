@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "eric-enm-pm-bench.name" . }}-1
+  labels:
+{{- include "eric-enm-pm-bench.helm-labels" . | nindent 4 }}
+  annotations:
+{{- include "eric-enm-pm-bench.configproduct-annotations" . | nindent 4 }}
+spec:
+  accessModes:
+{{- if .Values.persistentVolumeClaim.accessMode }}
+    - {{ .Values.persistentVolumeClaim.accessMode }}
+{{- else }}
+    - ReadWriteMany
+{{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistentVolumeClaim.size }}
+  storageClassName:
+{{- include "eric-enm-pm-bench.pvc-cniv-storageclassname" . | nindent 4 }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "eric-enm-pm-bench.name" . }}-2
+  labels:
+{{- include "eric-enm-pm-bench.helm-labels" . | nindent 4 }}
+  annotations:
+{{- include "eric-enm-pm-bench.configproduct-annotations" . | nindent 4 }}
+spec:
+  accessModes:
+{{- if .Values.persistentVolumeClaim.accessMode }}
+    - {{ .Values.persistentVolumeClaim.accessMode }}
+{{- else }}
+    - ReadWriteMany
+{{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistentVolumeClaim.size }}
+  storageClassName:
+{{- include "eric-enm-pm-bench.pvc-cniv-storageclassname" . | nindent 4 }}

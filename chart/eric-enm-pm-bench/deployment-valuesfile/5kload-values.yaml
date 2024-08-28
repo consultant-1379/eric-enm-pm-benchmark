@@ -1,0 +1,86 @@
+benchmarkArgs:
+  durationMinutes: "5040"
+  workload: "5kload.xml"
+  metricsPort: 9600
+  average900SecRopDuration: 650
+  reportingPeriodInMin: 60
+  controller:
+    mode: "CTRL"
+    modeArgs:
+      writers: "2"
+  writer:
+    modeArgs: {}
+    threadsPerWriter: 75
+  reader:
+    modeArgs:
+      delayMinutes: "15"
+    additionalArgs: "-Drops=1,15 -DprocessNodeB=true -DfileTypes=XML,CTR,CTUM,UETR,UETRACE,CELLTRACE,CELLTRACECCTR,EBSL,GPEH,EBM -Dreadsize=32 -Dthreads=16"
+
+resources:
+  controller:
+    limits:
+      cpu: "2"
+      memory: "4Gi"
+    requests:
+      cpu: "900m"
+      memory: "4Gi"
+  reader:
+    limits:
+      cpu: "4"
+      memory: "4Gi"
+    requests:
+      cpu: "900m"
+      memory: "4Gi"
+  writer:
+    limits:
+      cpu: "2"
+      memory: "5Gi"
+    requests:
+      cpu: "900m"
+      memory: "5Gi"
+
+persistentVolumeClaim:
+  targetBackend: file
+# storageConnectivity needed for GL-D470204-070
+#   storageConnectivity: networked
+# accessMode defaults to ReadWriteOnce but can be overridden here
+  accessMode: ReadWriteMany
+# Size of the persistent volume
+  size: 500Gi
+  storageClass:
+      name: standard
+
+images:
+  iotest:
+    name: eric-enm-pm-bench
+    tag: 1.0.0-66
+  initBench:
+    name: eric-cniv-init-bench
+    tag: 1.0.66-31
+
+imageCredentials:
+  iotest:
+    repoPath: proj-eric-oss-cniv/proj-eric-oss-cniv-drop
+  initBench:
+    repoPath: proj-eric-oss-cniv/proj-eric-oss-cniv-drop
+podAnnotations: {}
+# Required by DR-D1120-045
+nodeSelector: {}
+# DR-D1121-065
+annotations: {}
+# Required by DR-D1121-068
+labels: {}
+# Required for DR-D1120-060-AD and DR-D1120-067-AD
+tolerations:
+- key: node.kubernetes.io/not-ready
+  operator: Exists
+  effect: NoExecute
+  tolerationSeconds: 0
+- key: node.kubernetes.io/unreachable
+  operator: Exists
+  effect: NoExecute
+  tolerationSeconds: 0
+
+# Required for DR-D1120-080-AD
+terminationGracePeriodSeconds: 30
+

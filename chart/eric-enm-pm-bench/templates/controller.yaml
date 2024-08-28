@@ -1,0 +1,71 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "eric-enm-pm-bench.name" . }}-controller
+  labels:
+    {{- include "eric-enm-pm-bench.labels" . | nindent 4 }}
+  annotations:
+    {{- include "eric-enm-pm-bench.configproduct-annotations" . | nindent 4 }}
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        app: {{ include "eric-enm-pm-bench.name" . }}-controller
+        {{- include "eric-enm-pm-bench.grouplabel" . | nindent 8 }}
+        sidecar.istio.io/inject: "false"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: {{ template "eric-enm-pm-bench.fsGroup.coordinated" $ }}
+      imagePullSecrets:
+        - name: {{ template "eric-enm-pm-bench.pullSecret" $ }}
+      initContainers:
+      {{- if eq (include "eric-enm-pm-bench.cnivAgent" . ) "true" }}
+      - name: init-service
+        image: {{ template "eric-enm-pm-bench.initbenchImagePath" $ }}
+        args: ['{{ template "eric-enm-pm-bench.cnivAgent.endpoint" . }}', '{{ template "eric-enm-pm-bench.benchmarkGroup.label" . }}', '{{ include "eric-enm-pm-bench.name" . }}-controller']
+        imagePullPolicy: Always
+        securityContext:
+{{- include "eric-enm-pm-bench.container-securitycontext" . | nindent 10 }}
+      {{- end }}
+      containers:
+      - name: controller
+        image: {{ template "eric-enm-pm-bench.iotestImagePath" . }}
+        command: ['sh', '-c', '/entry.sh writer.IoWriter']
+        imagePullPolicy: {{ template "eric-enm-pm-bench.imagePullPolicy" $  }}
+        securityContext:
+{{- include "eric-enm-pm-bench.container-securitycontext" . | nindent 10 }}
+        resources:
+          {{- toYaml .Values.resources.controller | nindent 12 }}
+        volumeMounts:
+        - name: loaddir-1
+          mountPath: /loaddir1
+        - name: loaddir-2
+          mountPath: /loaddir2
+        - name: inputload
+          mountPath: /inputload
+        env:
+        - name: MODE
+          value: {{ .Values.benchmarkArgs.controller.mode }}
+        - name: MODE_ARGS
+          value: "/loaddir1/,/loaddir2/ /inputload/{{ .Values.benchmarkArgs.workload }} {{ .Values.benchmarkArgs.controller.modeArgs.writers }}"
+        - name: TEST_LENGHT
+          value: "{{ .Values.benchmarkArgs.durationMinutes }}"
+        - name: ADD_ARGS
+          value: "-Dmetrics_port={{ .Values.benchmarkArgs.metricsPort }} -DdeleteThreads=10 -Daverage900secRopDuration={{ .Values.benchmarkArgs.average900SecRopDuration }} -DreportingPeriodInMin={{ .Values.benchmarkArgs.reportingPeriodInMin }}"
+        {{- if eq (include "eric-enm-pm-bench.cnivAgent" . ) "true" }}
+        - name: CNIV_ARGS
+          value: '-DcnivAgentEnabled={{ include "eric-enm-pm-bench.cnivAgent" .}} -DcnivAgentURL={{ include "eric-enm-pm-bench.cnivAgent.endpoint" . }} -DcnivGroup={{ template "eric-enm-pm-bench.benchmarkGroup.label" $ }} -DcnivName={{ include "eric-enm-pm-bench.name" . }}-controller -Dmetrics_port={{ .Values.benchmarkArgs.metricsPort }}'
+        {{- end }}
+      volumes:
+      - name: loaddir-1
+        persistentVolumeClaim:
+          claimName: {{ include "eric-enm-pm-bench.name" . }}-1
+      - name: loaddir-2
+        persistentVolumeClaim:
+          claimName: {{ include "eric-enm-pm-bench.name" . }}-2
+      - name: inputload
+        configMap:
+          name: {{include "eric-enm-pm-bench.name" . }}-inputload
+      restartPolicy: Never

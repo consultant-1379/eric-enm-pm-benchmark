@@ -1,0 +1,17 @@
+productName: "ENM PM BENCH"
+productNumber: "CXC 174 3000"
+images:
+  iotest:
+    productName: "ENM PM BENCH Image"
+    productNumber: "CXC 174 3000"
+    registry: "armdocker.rnd.ericsson.se"
+    name: "eric-enm-pm-file-bench"
+    repoPath: "REPO_PATH"
+    tag: "VERSION"
+  #initBench:
+    #productName: "INIT CNIV Image"
+    #productNumber: "CXU XXX XXX"
+    #registry: "armdocker.rnd.ericsson.se"
+    #name: "eric-cniv-init-bench"
+    #repoPath: "REPO_PATH"
+    #tag: "VERSION"

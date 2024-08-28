@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- These tag defines the entire workload in the input xml. -->
+<!-- Bandwidth and filesize are calculated in kb -->
+<!-- Bandwidth for all the core Nodes are taken as 102400 kb (100 mbps) as per the MSPM FS and NRM -->
+<workload>
+    <!-- These tag defines the entire workload of ROP Period eg: 1 Min ROP or 15 Min ROP -->
+    <rop id="15">
+        <!-- ERBS -->
+        <!-- These Tag has multiple attributes which check start and count values and numOfNodes is total num of nodes. -->
+        <rns start="1" count="1" numOfNodes="480">
+            <nodeBandwidth  bandwidth="3072">
+                <fileworkload type="CELLTRACECCTR"  numfiles="1"  filesize="768"/>
+                <fileworkload type="CELLTRACE"  numfiles="1"  filesize="2304"/>
+                <fileworkload type="XML"  numfiles="1"  filesize="180"/>
+                <fileworkload type="UETRACE" numfiles="1" filesize="597"/>
+                <!-- As per the NRM Files sizes are zero for below 1 EBS file types but in FS we see the file collection and size -->
+                <fileworkload type="EBSL"  numfiles="1"  filesize="8"/>
+            </nodeBandwidth>
+        </rns>
+        <!-- radionode -->
+        <rns start="2" count="1" numOfNodes="220">
+            <!-- These tag defines the bandwidth of the node. -->
+            <nodeBandwidth  bandwidth="3072">
+                <!-- These tag will define the workload i.e file type and number of files and eachfilesize -->
+                <fileworkload type="CELLTRACECCTR"  numfiles="1"  filesize="768"/>
+                <fileworkload type="CELLTRACE"  numfiles="1"  filesize="2304"/>
+                <fileworkload type="XML"  numfiles="1"  filesize="180"/>
+                <!-- As per the NRM Files sizes are zero for below 1 EBS file types but in FS we see the file collection and size -->
+                <fileworkload type="EBSL"  numfiles="1"  filesize="8"/>
+            </nodeBandwidth>
+        </rns>
+        <rns start="3" count="1" numOfNodes="20">
+            <!-- These tag defines the bandwidth of the node. -->
+            <nodeBandwidth  bandwidth="3072">
+                <!-- These tag will define the workload i.e file type and number of files and eachfilesize -->
+                <fileworkload type="CELLTRACECCTR"  numfiles="1"  filesize="768"/>
+                <fileworkload type="CELLTRACE"  numfiles="1"  filesize="2304"/>
+                <fileworkload type="XML"  numfiles="1"  filesize="180"/>
+                <fileworkload type="UETRACE"  numfiles="1"  filesize="597"/>
+                <!-- As per the NRM Files sizes are zero for below 1 EBS file types but in DDP and FS we see the file collection and size -->
+                <fileworkload type="EBSL"  numfiles="1"  filesize="8"/>
+            </nodeBandwidth>
+        </rns>
+        <!-- RBS -->
+        <rns start="4" count="1" numOfNodes="350">
+            <!-- These tag defines the bandwidth of the node. -->
+            <nodeBandwidth  bandwidth="3072">
+                <!-- These tag will define the workload i.e file type and number of files and eachfilesize -->
+                <fileworkload type="XML"  numfiles="1"  filesize="82"/>
+                <fileworkload type="GPEH"  numfiles="1"  filesize="35"/>
+            </nodeBandwidth>
+        </rns>
+
+        <!-- WCDMA RNC -->
+        <rns start="5" count="2" numOfNodes="0">
+        <!-- These tag defines the bandwidth of the node. -->
+            <rnc  bandwidth="16384">
+                <!-- These tag will define the workload i.e file type and number of files and eachfilesize -->
+                <fileworkload type="XML"  numfiles="1"  filesize="7987"/>
+                <fileworkload type="CTR"  numfiles="1"  filesize="2458"/>
+                <fileworkload type="UETR"  numfiles="16"  filesize="275"/>
+                <fileworkload type="GPEH"  numfiles="33"  filesize="6400"/> <!-- max GPEH FILE, we have taken 33 files, which is the MP limitation, in accordance with the NRM -->
+            </rnc>
+        </rns>
+
+        <!-- SGSN-MME Type 1 -->
+        <rns start="7" count="1" numOfNodes="10">
+            <nodeBandwidth  bandwidth="102400">
+                <fileworkload type="XML"  numfiles="1"  filesize="180"/>
+                <fileworkload type="UETRACE"  numfiles="1"  filesize="1024"/>
+                <fileworkload type="CTUM" numfiles="1" filesize="10240"/>
+            </nodeBandwidth>
+        </rns>
+
+        <!-- MGW Type 1 -->
+        <rns start="8" count="1" numOfNodes="15">
+            <nodeBandwidth  bandwidth="102400">
+                <fileworkload type="XML"  numfiles="1"  filesize="180"/>
+            </nodeBandwidth>
+        </rns>
+
+
+        <!-- EPG Type 1 -->
+        <rns start="9" count="1" numOfNodes="6">
+            <nodeBandwidth  bandwidth="1024">
+                <fileworkload type="XML"  numfiles="3"  filesize="3072"/>
+            </nodeBandwidth>
+        </rns>
+
+        <!-- MTAS Type 1 -->
+        <rns start="10" count="1" numOfNodes="10">
+            <nodeBandwidth  bandwidth="1024">
+                <fileworkload type="XML"  numfiles="1"  filesize="2048"/>
+            </nodeBandwidth>
+        </rns>
+
+        <!-- DSC Type 1 -->
+        <rns start="11" count="1" numOfNodes="10">
+            <nodeBandwidth  bandwidth="1024">
+                <fileworkload type="XML"  numfiles="1"  filesize="3"/>
+            </nodeBandwidth>
+        </rns>
+
+        <!-- Router6672 Type 1 -->
+        <rns start="12" count="1" numOfNodes="105">
+            <nodeBandwidth  bandwidth="1024">
+                <fileworkload type="XML"  numfiles="1"  filesize="254"/>
+            </nodeBandwidth>
+        </rns>
+
+    </rop>
+    <rop id="1">
+        <!-- SGSN-MME Type 1 -->
+        <rns start="13" count="1" numOfNodes="10">
+            <nodeBandwidth  bandwidth="102400">
+                <fileworkload type="EBM" numfiles="4" filesize="10240"/>
+            </nodeBandwidth>
+        </rns>
+        <!-- MTAS Type 1 -->
+        <rns start="14" count="1" numOfNodes="10">
+            <nodeBandwidth  bandwidth="1024">
+                <fileworkload type="XML" numfiles="1" filesize="2048"/>
+            </nodeBandwidth>
+        </rns>
+        <!-- DSC Type 1 -->
+        <rns start="15" count="1" numOfNodes="10">
+            <nodeBandwidth  bandwidth="1024">
+                <fileworkload type="XML" numfiles="1" filesize="3"/>
+            </nodeBandwidth>
+        </rns>
+        <!-- Router6672 Type 1 -->
+        <rns start="16" count="1" numOfNodes="40">
+            <nodeBandwidth  bandwidth="1024">
+                <fileworkload type="XML" numfiles="1" filesize="254"/>
+            </nodeBandwidth>
+        </rns>
+
+
+    </rop>
+    <!-- These tag defines the retention period for the subscription type and possible rops that can be performed in that retention period -->
+    <!-- value aurgument here is the total Number of ROPS can be performed in the Retention period -->
+    <!-- Deletion interval process will run every 15 Mins and 6 Hours; it is not according to Subscription type basis. (6 Hours' time is configurable) -->
+    <retention type="XML:15" value="288"/>
+    <retention type="CTR:15" value="12"/>
+    <retention type="CTUM:15" value="24"/>
+    <retention type="UETR:15" value="24"/>
+    <retention type="UETRACE:15" value="24"/>
+    <retention type="CELLTRACE:15" value="12"/>
+    <retention type="CELLTRACECCTR:15" value="12"/>
+    <retention type="EBSL:15" value="288"/>
+    <retention type="GPEH:15" value="12"/>
+    <retention type="EBM:01" value="180"/>
+    <retention type="XML:01" value="180"/>
+
+    <!-- writesize : This is the size of chuck that the files are being written in. -->
+    <!-- value aurgument here is the size of chuck that the files are being written in and calculated in KB -->
+    <writesize type="XML" value="64"/>
+    <writesize type="CTR" value="32"/>
+    <writesize type="CELLTRACECCTR" value="32"/>
+    <writesize type="CELLTRACE" value="32"/>
+    <writesize type="UETRACE" value="32"/>
+    <writesize type="CTUM" value="32"/>
+    <writesize type="UETR" value="32"/>
+    <writesize type="EBM" value="64"/>
+</workload>

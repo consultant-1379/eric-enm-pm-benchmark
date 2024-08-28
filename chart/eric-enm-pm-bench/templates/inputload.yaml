@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "eric-enm-pm-bench.name" . }}-inputload
+  labels:
+    {{- include "eric-enm-pm-bench.labels" . | nindent 4 }}
+  annotations:
+    {{- include "eric-enm-pm-bench.annotations" . | nindent 4 }}
+data:
+ testload.xml: |-
+        {{- .Files.Get "test-resource/testload.xml" | nindent 8 }}
+ 80kload.xml: |-
+        {{- .Files.Get "application-resource/80kload.xml" | nindent 8 }}
+ 5kload.xml: |-
+        {{- .Files.Get "application-resource/5kload.xml" | nindent 8 }}
